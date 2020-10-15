@@ -5,6 +5,7 @@ const app = express();
 const cors = require('cors');
 const passport = require('passport');
 const users = require('./routes/api/users');
+const exercises = require('./routes/api/exercises')
 const port = process.env.PORT || 8000;
 
 // middleware
@@ -42,6 +43,7 @@ app.get('/', (req, res) => {
 
 // api/users route middleware
 app.use('/api/users', users);
+app.use('/api/users/exercises', exercises);
 
 // SERVER PORT TO LISTEN
 app.listen(port, () => {

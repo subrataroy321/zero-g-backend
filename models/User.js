@@ -38,6 +38,10 @@ const UserSchema = new Schema({
   imageId: {
     type: String,
   },
+  exercises: [{    
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Exercise'
+  }]
 });
 
 module.exports = User = mongoose.model('User', UserSchema);
