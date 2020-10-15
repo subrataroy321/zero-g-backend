@@ -68,7 +68,11 @@ router.post('/login', (req, res) => {
               id: user.id,
               name: user.name,
               email: user.email,
-              imageId: user.imageId,
+              mass: user.mass,
+              height: user.height,
+              age: user.age,
+              boneDensity: user.boneDensity,
+              // imageId: user.imageId,
             };
 
             // sign in token
