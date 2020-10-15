@@ -1,5 +1,5 @@
-const mongoose = require("mongoose")
-const Schema = mongoose.Schema
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 // User Schema
 const UserSchema = new Schema({
@@ -18,11 +18,26 @@ const UserSchema = new Schema({
   date: {
     type: Date,
     default: Date.now(),
-  }
-  ,
+  },
+  mass: {
+    type: Number,
+    // required: true
+  },
+  height: {
+    type: Number,
+    // required: true
+  },
+  age: {
+    type: Number,
+    // required: true
+  },
+  boneDensity: {
+    type: Number,
+    // required: true
+  },
   imageId: {
     type: String,
-  }
-})
+  },
+});
 
-module.exports = User = mongoose.model("User", UserSchema)
+module.exports = User = mongoose.model('User', UserSchema);
