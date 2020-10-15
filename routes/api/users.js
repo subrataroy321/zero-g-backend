@@ -55,7 +55,7 @@ router.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   // find user using email
-  db.User.findOne({ email })
+  db.User.findOne({ email }).populate('exercises')
     .then((user) => {
       if (!user) {
         res.status(400).json({ message: 'User not found' });
@@ -72,6 +72,7 @@ router.post('/login', (req, res) => {
               height: user.height,
               age: user.age,
               boneDensity: user.boneDensity,
+              exercises: user.exercises,
               // imageId: user.imageId,
             };
 
@@ -138,16 +139,32 @@ router.post('/updateImage', (req, res) => {
     });
 });
 
+// GET /api/users
+router.get('/:id', (req, res) => {
+  db.User.findById(req.params.id).populate('exercises')
+  .then(user => {
+    res.send(user);
+  })
+  .catch(err => {
+    console.log(err);
+  })
+})
+
 // GET api/user/current (Private)
 router.get(
   '/current',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     res.json({
-      id: req.user.is,
-      name: req.user.name,
-      email: req.user.email,
+      id: res.user.id,
+      name: res.user.name,
+      email: res.user.email,
+      mass: res.user.mass,
+      height: res.user.height,
+      age: res.user.age,
+      boneDensity: res.user.boneDensity,
       imageId: res.user.imageId,
+      exercises: res.user.exercises,
     });
   }
 );
