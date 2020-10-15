@@ -130,6 +130,17 @@ router.post("/updateImage", (req, res) => {
     })
 })
 
+// GET /api/users
+router.get('/', (req, res) => {
+  db.User.find()
+  .then(user => {
+    res.send(user);
+  })
+  .catch(err => {
+    console.log(err);
+  })
+})
+
 // GET api/user/current (Private)
 router.get("/current", passport.authenticate("jwt", { session: false }), (req, res) => {
     res.json({
