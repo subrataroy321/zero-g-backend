@@ -29,7 +29,13 @@ router.post('/add', (req, res) => {
     .catch(err => console.log(err))
 })
 
-// router.get
+router.delete('/:id', (req,res) => {
+    Exercise.deleteOne({
+        _id: req.params.id
+    })
+    .then(res.send('deleted'))
+    .catch(err => console.log(err))
+})
 
 router.post('/update', (req, res) => {
     db.User.findOne({
