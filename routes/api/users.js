@@ -82,7 +82,7 @@ router.post('/login', (req, res) => {
               JWT_SECRET,
               { expiresIn: 3600 },
               (error, token) => {
-                res.json({ success: true, token: `Bearer ${token}` });
+                res.json({ success: true, token: `bearer ${token}` });
               }
             );
           } else {
@@ -150,21 +150,23 @@ router.get('/:id', (req, res) => {
   })
 })
 
-// GET api/user/current (Private)
+// GET api/users/current (Private)
 router.get(
   '/current',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
+    console.log(res)
     res.json({
-      id: res.user.id,
-      name: res.user.name,
-      email: res.user.email,
-      mass: res.user.mass,
-      height: res.user.height,
-      age: res.user.age,
-      boneDensity: res.user.boneDensity,
-      imageId: res.user.imageId,
-      exercises: res.user.exercises,
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+      mass: req.user.mass,
+      height: req.user.height,
+      age: req.user.age,
+      boneDensity: req.user.boneDensity,
+      imageId: req.user.imageId,
+      exercises: req.user.exercises,
+      token: req.query.secret_token
     });
   }
 );
