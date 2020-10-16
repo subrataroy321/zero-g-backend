@@ -19,6 +19,11 @@ app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+app.all('*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 // Custom Request Logger Middleware
 app.use((req, res, next) => {
   const url = req.url;
