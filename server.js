@@ -14,15 +14,14 @@ const corsOptions = {
   credentials: true, // allows session cookies to be sent back and forth between client and server
   optionsSuccessStatus: 200, // only for legacy browsers as they fail if you send 204 back
 };
-// middleware
-app.use(cors(corsOptions));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
 app.all('*', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   next();
 });
+// middleware
+app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Custom Request Logger Middleware
 app.use((req, res, next) => {
