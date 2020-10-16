@@ -5,11 +5,17 @@ const app = express();
 const cors = require('cors');
 const passport = require('passport');
 const users = require('./routes/api/users');
-const exercises = require('./routes/api/exercises')
+const exercises = require('./routes/api/exercises');
 const port = process.env.PORT || 8000;
 
+const corsOptions = {
+  origin: ['https://zero-g-frontend-25239.web.app'],
+  methods: 'GET, POST, PUT, DELETE', // only these methods are allowed
+  credentials: true, // allows session cookies to be sent back and forth between client and server
+  optionsSuccessStatus: 200, // only for legacy browsers as they fail if you send 204 back
+};
 // middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
