@@ -25,6 +25,11 @@ router.post('/register', (req, res) => {
           height: req.body.height,
           age: req.body.age,
           boneDensity: req.body.boneDensity,
+          destination: {
+            name: req.body.plannet,
+            totalTripDays: req.body.days,
+            tripStarted: req.body.tripStarted,
+          }
         });
 
         bcrypt.genSalt(10, (error, salt) => {
@@ -64,17 +69,28 @@ router.post('/login', (req, res) => {
         bcrypt.compare(password, user.password).then((isMatch) => {
           // if matchs generate a token using user saved information
           if (isMatch) {
-            const payload = {
-              id: user.id,
-              name: user.name,
-              email: user.email,
-              mass: user.mass,
-              height: user.height,
-              age: user.age,
-              boneDensity: user.boneDensity,
-              exercises: user.exercises,
-              // imageId: user.imageId,
-            };
+
+              const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+              const startDate = user.destination.tripStarted
+              const todaysDate = new Date();
+              const diffDays = Math.round(Math.abs((startDate - todaysDate) / oneDay));
+
+              const payload = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                mass: user.mass,
+                height: user.height,
+                age: user.age,
+                boneDensity: user.boneDensity,
+                exercises: user.exercises,
+                // imageId: user.imageId,
+                destination: {
+                  name: user.destination.name,
+                  totalTripDays: user.destination.totalTripDays,
+                  daysInTrip: diffDays,
+                }
+              };
 
             // sign in token
             jwt.sign(

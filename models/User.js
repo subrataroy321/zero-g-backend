@@ -41,7 +41,18 @@ const UserSchema = new Schema({
   exercises: [{    
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Exercise'
-  }]
+  }],
+  destination: {
+    name: {
+      type: String,
+    },
+    totalTripDays: {
+      type: Number,
+    },
+    tripStarted: {
+      type: Date,
+    }
+  }
 });
 
 module.exports = User = mongoose.model('User', UserSchema);
