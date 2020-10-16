@@ -10,6 +10,18 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // load user model
 const db = require('../../models');
 
+// GET /api/users
+router.get('/', (req, res) => {
+  db.User.find()
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send(err);
+    });
+});
+
 // POST route api/users/register (Public)
 router.post('/register', (req, res) => {
   db.User.findOne({ email: req.body.email })
