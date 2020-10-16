@@ -29,7 +29,7 @@ router.post('/register', (req, res) => {
             name: req.body.plannet,
             totalTripDays: req.body.days,
             tripStarted: req.body.tripStarted,
-          }
+          },
         });
 
         bcrypt.genSalt(10, (error, salt) => {
@@ -40,7 +40,7 @@ router.post('/register', (req, res) => {
             newUser
               .save()
               .then((createdUser) => res.json(createdUser))
-              .catch((error) => console.log(error));
+              .catch((error) => res.json(error));
           });
         });
       } else {
@@ -60,7 +60,8 @@ router.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   // find user using email
-  db.User.findOne({ email }).populate('exercises')
+  db.User.findOne({ email })
+    .populate('exercises')
     .then((user) => {
       if (!user) {
         res.status(400).json({ message: 'User not found' });
@@ -69,28 +70,29 @@ router.post('/login', (req, res) => {
         bcrypt.compare(password, user.password).then((isMatch) => {
           // if matchs generate a token using user saved information
           if (isMatch) {
+            const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+            const startDate = user.destination.tripStarted;
+            const todaysDate = new Date();
+            const diffDays = Math.round(
+              Math.abs((startDate - todaysDate) / oneDay)
+            );
 
-              const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-              const startDate = user.destination.tripStarted
-              const todaysDate = new Date();
-              const diffDays = Math.round(Math.abs((startDate - todaysDate) / oneDay));
-
-              const payload = {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                mass: user.mass,
-                height: user.height,
-                age: user.age,
-                boneDensity: user.boneDensity,
-                exercises: user.exercises,
-                // imageId: user.imageId,
-                destination: {
-                  name: user.destination.name,
-                  totalTripDays: user.destination.totalTripDays,
-                  daysInTrip: diffDays,
-                }
-              };
+            const payload = {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              mass: user.mass,
+              height: user.height,
+              age: user.age,
+              boneDensity: user.boneDensity,
+              exercises: user.exercises,
+              // imageId: user.imageId,
+              destination: {
+                name: user.destination.name,
+                totalTripDays: user.destination.totalTripDays,
+                daysInTrip: diffDays,
+              },
+            };
 
             // sign in token
             jwt.sign(
@@ -157,21 +159,22 @@ router.post('/updateImage', (req, res) => {
 
 // GET /api/users
 router.get('/:id', (req, res) => {
-  db.User.findById(req.params.id).populate('exercises')
-  .then(user => {
-    res.send(user);
-  })
-  .catch(err => {
-    console.log(err);
-  })
-})
+  db.User.findById(req.params.id)
+    .populate('exercises')
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
 // GET api/users/current (Private)
 router.get(
   '/current',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log(res)
+    console.log(res);
     res.json({
       id: req.user.id,
       name: req.user.name,
@@ -182,7 +185,7 @@ router.get(
       boneDensity: req.user.boneDensity,
       imageId: req.user.imageId,
       exercises: req.user.exercises,
-      token: req.query.secret_token
+      token: req.query.secret_token,
     });
   }
 );
